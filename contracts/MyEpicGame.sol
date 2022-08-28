@@ -21,6 +21,7 @@ contract MyEpicGame is ERC721 {
         uint256 hp;
         uint256 maxHp;
         uint256 attackDamage;
+        uint256 totalAttackDamage;
     }
     event CharacterNFTMinted(
         address sender,
@@ -70,6 +71,14 @@ contract MyEpicGame is ERC721 {
     // Criamos um mapping do tokenId => atributos das NFTs.
     mapping(uint256 => CharacterAttributes) public nftHolderAttributes;
 
+    function getAllPlayers() external view returns (CharacterAttributes[] memory) { 
+        CharacterAttributes[] memory _return = new CharacterAttributes[](_tokenIds.current());
+        for (uint256 index = 1; index < _tokenIds.current(); index++) {
+            _return[index] = nftHolderAttributes[index];
+        }
+        return _return;
+    }
+
     struct BigBoss {
         string name;
         string imageURI;
@@ -114,6 +123,7 @@ contract MyEpicGame is ERC721 {
             bigBoss.hp = 0;
         } else {
             bigBoss.hp = bigBoss.hp - player.attackDamage;
+            player.totalAttackDamage += player.attackDamage;
         }
 
         // Permite que o boss ataque o jogador.
@@ -174,7 +184,8 @@ contract MyEpicGame is ERC721 {
                     imageURI: characterImageURIs[i],
                     hp: characterHp[i],
                     maxHp: characterHp[i],
-                    attackDamage: characterAttackDmg[i]
+                    attackDamage: characterAttackDmg[i],
+                    totalAttackDamage: 0
                 })
             );
 
@@ -212,7 +223,8 @@ contract MyEpicGame is ERC721 {
             imageURI: defaultCharacters[_characterIndex].imageURI,
             hp: defaultCharacters[_characterIndex].hp,
             maxHp: defaultCharacters[_characterIndex].maxHp,
-            attackDamage: defaultCharacters[_characterIndex].attackDamage
+            attackDamage: defaultCharacters[_characterIndex].attackDamage,
+            totalAttackDamage: 0
         });
 
         console.log(
