@@ -31,3 +31,4 @@ const runMain = async () => {
 
 runMain();
 //0xF50082106C42c9Bdd2cD7657e44FaB1CB24F1A2a 
+// npx hardhat run scripts/deploy.js --network goerli
